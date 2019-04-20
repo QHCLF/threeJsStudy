@@ -16,38 +16,38 @@
     var scene = new THREE.Scene();
 
     var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 10000 );
-    camera.position.set(0, 1000, 0);
-    camera.up.set(0, 0, 1);
+    camera.position.set(0, 0, 600);
+    camera.up.set(0, 1, 0);
     camera.lookAt(0, 0, 0);
 
-    var light = new THREE.DirectionalLight(0xFF0000, 1.0, 0);
+    var light = new THREE.AmbientLight(0xFF0000);
     light.position.set(100, 100, 200);
     scene.add(light);
+    light = new THREE.PointLight(0x00FF00);
+    light.position.set(0, 0,300);
+    scene.add(light);
 
-    var renderer = new THREE.WebGLRenderer();
+    var renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
+    renderer.setClearColor(0xFFFFFF, 1.0);
 
-    var geometry = new THREE.Geometry();
-    geometry.vertices.push(new THREE.Vector3( -500, 0, 0) );
-    geometry.vertices.push(new THREE.Vector3( 500, 0, 0) );
+    //var stats = new Stats();
 
-    var material = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
 
-    for(var i=0;i<=20;i++){
-        var line = new THREE.Line( geometry, material );
-        line.position.z = (i * 50) - 500;
-        scene.add( line );
+    var geometry = new THREE.CylinderGeometry(100, 150, 400);
+    var material = new THREE.MeshLambertMaterial( { color:0xFFFFFF} );
+    var mesh = new THREE.Mesh( geometry,material);
+    mesh.position = new THREE.Vector3(0,0,0);
+    scene.add(mesh);
 
-        var line = new THREE.Line(geometry, material);
-        line.position.x = (i * 50) - 500;
-        line.rotation.y = 90 * Math.PI / 180;   //转90度
-        scene.add(line);
-
+    function animation(){
+        mesh.position.z -= 1;
+        renderer.render(scene, camera);
+        requestAnimationFrame(animation);
     }
 
-
-    renderer.render( scene, camera );
+    animation();
 
 </script>
 
